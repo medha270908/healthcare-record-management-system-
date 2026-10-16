@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Edit Record: {{ record.patient_id }}{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 760px; margin: 0 auto;">
+    <div class="card-header">
+        <div>
+            <h2 class="card-title" style="color: #b45309;">⚠️ Direct Database Record Editor</h2>
+            <p class="card-subtitle">Database Integrity &amp; Alteration Testing Tool</p>
+        </div>
+        <a class="button secondary small" href="{{ url_for('patients') }}">Cancel</a>
+    </div>
+
+    <div class="tamper-box">
+        <div class="tamper-header">
+            <span>🔬</span> Database Modification Simulation
+        </div>
+        <div class="tamper-desc">
+            This tool directly updates patient clinical information in the database <strong>without updating the blockchain hash</strong>.
+            <br><br>
+            When you subsequently verify this record, the cryptographic verification engine will detect the hash mismatch and immediately flag the record as altered/modified.
+        </div>
+    </div>
+
+    <form method="POST" action="{{ url_for('tamper_record', patient_id=record.patient_id) }}">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Patient ID</label>
+                <input type="text" value="{{ record.patient_id }}" readonly style="background: #f1f5f9; cursor: not-allowed;">
+            </div>
+
+            <div class="form-group">
+                <label>Patient Name</label>
+                <input type="text" value="{{ record.name }}" readonly style="background: #f1f5f9; cursor: not-allowed;">
+            </div>
+
+            <div class="form-group full-width">
+                <label for="disease">Diagnosis / Disease (Modify to test tamper detection) *</label>
+                <input type="text" id="disease" name="disease" value="{{ record.disease }}" required style="border-color: #f59e0b; font-weight: 600;">
+                <span class="hint">Change the clinical diagnosis to test hash mismatch detection</span>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="prescription">Prescription</label>
+                <input type="text" id="prescription" name="prescription" value="{{ record.prescription or '' }}">
+            </div>
+        </div>
+
+        <div class="action-row">
+            <button type="submit" class="button warning">
+                💾 Save Directly to Database (Bypass Blockchain)
+            </button>
+            <a class="button secondary" href="{{ url_for('verify', patient_id=record.patient_id) }}">
+                Back to Verify
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Add Patient Record{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 800px; margin: 0 auto;">
+    <div class="card-header">
+        <div>
+            <h2 class="card-title">📝 Add New Patient Healthcare Record</h2>
+            <p class="card-subtitle">Data is saved to database and a cryptographic SHA-256 fingerprint is anchored to the blockchain</p>
+        </div>
+    </div>
+
+    <form method="POST" action="{{ url_for('add_patient') }}">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="patient_id">Patient ID *</label>
+                <input type="text" id="patient_id" name="patient_id" placeholder="e.g. P001" required>
+                <span class="hint">Unique clinical ID</span>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Full Patient Name *</label>
+                <input type="text" id="name" name="name" placeholder="e.g. Rahul Sharma" required>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age *</label>
+                <input type="number" id="age" name="age" min="1" max="120" placeholder="e.g. 35" required>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Gender *</label>
+                <select id="gender" name="gender">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="blood_group">Blood Group</label>
+                <select id="blood_group" name="blood_group">
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="O+" selected>O+</option>
+                    <option value="O-">O-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="disease">Diagnosis / Disease *</label>
+                <input type="text" id="disease" name="disease" placeholder="e.g. Fever, Type 2 Diabetes" required>
+                <span class="hint">Primary clinical diagnosis</span>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="prescription">Medical Prescription &amp; Treatment Notes</label>
+                <textarea id="prescription" name="prescription" rows="3" placeholder="e.g. Paracetamol 500mg BD for 5 days, rest and hydration"></textarea>
+            </div>
+        </div>
+
+        <div class="hint-box" style="margin-bottom: 20px;">
+            <span>ℹ️</span>
+            <div>
+                <strong>Automated SHA-256 Hashing:</strong> When you submit this record, the backend generates an SHA-256 hash string from the fields above and calls <code>storeHash(patientId, hash)</code> on the smart contract.
+            </div>
+        </div>
+
+        <div class="action-row">
+            <button type="submit">🔒 Save &amp; Anchor to Blockchain</button>
+            <a class="button secondary" href="{{ url_for('patients') }}">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

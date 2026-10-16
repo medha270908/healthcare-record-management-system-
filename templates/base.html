@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Healthcare Record Management{% endblock %} | Blockchain System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <a href="{{ url_for('dashboard') if session.get('user_id') else url_for('login') }}" class="brand-container">
+            <div class="brand-icon">🛡️</div>
+            <div class="brand-text">
+                <h1>HealthChain</h1>
+                <p>Blockchain Record Verification System</p>
+            </div>
+        </a>
+
+        {% if session.get('user_id') %}
+        <nav class="nav-links">
+            <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                📊 Dashboard
+            </a>
+            <a href="{{ url_for('add_patient') }}" class="nav-link {% if request.endpoint == 'add_patient' %}active{% endif %}">
+                ➕ Add Record
+            </a>
+            <a href="{{ url_for('patients') }}" class="nav-link {% if request.endpoint == 'patients' %}active{% endif %}">
+                👥 Patients
+            </a>
+            <a href="{{ url_for('audit_log') }}" class="nav-link {% if request.endpoint == 'audit_log' %}active{% endif %}">
+                ⛓️ Audit Trail
+            </a>
+            <div class="user-badge">
+                <span class="user-dot"></span>
+                <span>Dr. {{ session.get('username') }}</span>
+            </div>
+            <a href="{{ url_for('logout') }}" class="nav-link" style="color: #f87171;">
+                🚪 Logout
+            </a>
+        </nav>
+        {% endif %}
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-box {{ category or 'info' }}">
+                        <span>{{ message }}</span>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

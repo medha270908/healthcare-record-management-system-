@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Blockchain Audit Trail{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h2 class="card-title">⛓️ Blockchain Audit Trail &amp; Traceability Log</h2>
+            <p class="card-subtitle">Immutable log of all store and verification operations (Word Document Section 7.3 &amp; Module 7)</p>
+        </div>
+        <div>
+            <a class="button secondary small" href="{{ url_for('dashboard') }}">← Back to Dashboard</a>
+        </div>
+    </div>
+
+    <div class="hint-box" style="margin-bottom: 20px;">
+        <span>📜</span>
+        <div>
+            <strong>Audit &amp; Traceability Mechanism:</strong> Every time a patient record is registered or verified, an entry is recorded in this audit log. This provides hospitals with a transparent, chronological ledger of all clinical data checks.
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Log ID</th>
+                    <th>Patient ID</th>
+                    <th>Operation</th>
+                    <th>Cryptographic Record Hash</th>
+                    <th>Transaction Hash</th>
+                    <th>Verification Result</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>#{{ log.id }}</td>
+                    <td><strong>{{ log.patient_id }}</strong></td>
+                    <td>
+                        {% if log.action == 'STORE' %}
+                        <span class="badge info">ANCHOR (STORE)</span>
+                        {% else %}
+                        <span class="badge" style="background: var(--accent-purple-light); color: var(--accent-purple);">VERIFY</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <code style="font-size: 11px; background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">
+                            {{ log.record_hash[:16] }}...{{ log.record_hash[-8:] }}
+                        </code>
+                    </td>
+                    <td>
+                        {% if log.tx_hash %}
+                        <code style="font-size: 11px; color: var(--primary);">
+                            {{ log.tx_hash[:14] }}...
+                        </code>
+                        {% else %}
+                        <span style="color: var(--text-muted); font-size: 12px;">Call (Free)</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if log.result == 'Verified' or log.result == 'Stored' %}
+                        <span class="badge verified">{{ log.result }}</span>
+                        {% elif log.result == 'Modified' %}
+                        <span class="badge modified">Tampered</span>
+                        {% else %}
+                        <span class="badge warning">{{ log.result }}</span>
+                        {% endif %}
+                    </td>
+                    <td style="font-size: 12.5px; color: var(--text-muted);">
+                        {{ log.created_at }}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 26px; color: var(--text-muted);">
+                        No blockchain audit transactions recorded yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

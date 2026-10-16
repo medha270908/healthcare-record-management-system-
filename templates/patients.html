@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Patients List{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h2 class="card-title">👥 Registered Patient Medical Records</h2>
+            <p class="card-subtitle">All patient records stored securely in database with cryptographic blockchain fingerprints</p>
+        </div>
+        <div class="action-row" style="margin-top: 0;">
+            <a class="button" href="{{ url_for('add_patient') }}">+ Add New Record</a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Patient ID</th>
+                    <th>Name</th>
+                    <th>Age / Gender</th>
+                    <th>Blood</th>
+                    <th>Diagnosis / Disease</th>
+                    <th>Prescription</th>
+                    <th>Record Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in patients %}
+                <tr>
+                    <td><strong>{{ p.patient_id }}</strong></td>
+                    <td>{{ p.name }}</td>
+                    <td>{{ p.age }} yrs / {{ p.gender }}</td>
+                    <td><span class="badge info">{{ p.blood_group or 'N/A' }}</span></td>
+                    <td><strong>{{ p.disease }}</strong></td>
+                    <td style="max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        {{ p.prescription or 'None' }}
+                    </td>
+                    <td>{{ p.record_date }}</td>
+                    <td>
+                        <div style="display: flex; gap: 6px;">
+                            <a class="button small" href="{{ url_for('verify', patient_id=p.patient_id) }}" title="Compare database hash with blockchain hash">
+                                🔍 Verify
+                            </a>
+                            <a class="button small warning" href="{{ url_for('tamper_record', patient_id=p.patient_id) }}" title="Edit record directly in database to test tamper detection">
+                                ✏️ Edit in DB
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" style="text-align: center; padding: 30px; color: var(--text-muted);">
+                        No patient records stored yet. Click "Add New Record" to register a patient.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

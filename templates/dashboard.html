@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- Metric Cards Grid -->
+<div class="stats-grid">
+    <div class="stat-card blue">
+        <div class="stat-icon">👤</div>
+        <div class="stat-info">
+            <h3>{{ total_patients }}</h3>
+            <p>Total Patient Records</p>
+        </div>
+    </div>
+
+    <div class="stat-card teal">
+        <div class="stat-icon">🔒</div>
+        <div class="stat-info">
+            <h3>{{ total_anchors }}</h3>
+            <p>Blockchain Hashes Anchored</p>
+        </div>
+    </div>
+
+    <div class="stat-card purple">
+        <div class="stat-icon">🔍</div>
+        <div class="stat-info">
+            <h3>{{ total_verifications }}</h3>
+            <p>Verification Checks Run</p>
+        </div>
+    </div>
+
+    <div class="stat-card green">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-info">
+            <h3>{% if bc_connected %}Active{% else %}Ready{% endif %}</h3>
+            <p>Blockchain Node ({{ db_type }} DB)</p>
+        </div>
+    </div>
+</div>
+
+<!-- Architecture Flow -->
+<div class="workflow-banner">
+    <div class="workflow-title">
+        <span>🔄</span> System Architecture &amp; Data Flow
+    </div>
+    <div class="workflow-steps">
+        <div class="workflow-node">
+            <div class="node-title">1. Patient Details</div>
+            <div class="node-subtitle">Clinical Form</div>
+        </div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-node">
+            <div class="node-title">2. {{ db_type }} Database</div>
+            <div class="node-subtitle">Off-Chain Clinical Data</div>
+        </div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-node">
+            <div class="node-title">3. Flask Backend</div>
+            <div class="node-subtitle">SHA-256 Engine</div>
+        </div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-node">
+            <div class="node-title">4. Smart Contract</div>
+            <div class="node-subtitle">HealthcareRecord.sol</div>
+        </div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-node">
+            <div class="node-title">5. Blockchain Ledger</div>
+            <div class="node-subtitle">Immutable Hash Proof</div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Action Card -->
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h2 class="card-title">Welcome to HealthChain, Dr. {{ username }}</h2>
+            <p class="card-subtitle">Hospital medical record management and cryptographic verification portal</p>
+        </div>
+        <div class="action-row" style="margin-top: 0;">
+            <a class="button" href="{{ url_for('add_patient') }}">+ Add New Record</a>
+            <a class="button secondary" href="{{ url_for('patients') }}">View All Patients</a>
+            <a class="button secondary" href="{{ url_for('audit_log') }}">Audit Trail</a>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Patient Records Table -->
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h3 class="card-title">📋 Recently Registered Patients</h3>
+            <p class="card-subtitle">Quick access to recent medical entries and instant integrity verification</p>
+        </div>
+        <a class="button secondary small" href="{{ url_for('patients') }}">View All {{ total_patients }} Records →</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Patient ID</th>
+                    <th>Name</th>
+                    <th>Age / Gender</th>
+                    <th>Blood</th>
+                    <th>Diagnosis / Disease</th>
+                    <th>Record Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in recent_patients %}
+                <tr>
+                    <td><strong>{{ p.patient_id }}</strong></td>
+                    <td>{{ p.name }}</td>
+                    <td>{{ p.age }} yrs / {{ p.gender }}</td>
+                    <td><span class="badge info">{{ p.blood_group or 'N/A' }}</span></td>
+                    <td><strong>{{ p.disease }}</strong></td>
+                    <td>{{ p.record_date }}</td>
+                    <td>
+                        <a class="button small" href="{{ url_for('verify', patient_id=p.patient_id) }}">
+                            🔍 Verify
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 24px; color: var(--text-muted);">
+                        No patient records registered yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

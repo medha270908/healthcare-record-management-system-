@@ -1,0 +1,77 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\upadh\\OneDrive\\Desktop\\healthcare-blockchain\\healthcare-blockchain\\blockchain\\contracts\\HealthcareRecord.sol": {
+      "lastModificationDate": 1790513118547,
+      "contentHash": "55bf2d327f1a8dff4b6374e80d9b372d",
+      "sourceName": "contracts/HealthcareRecord.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "HealthcareRecord"
+      ]
+    },
+    "C:\\Users\\upadh\\OneDrive\\Desktop\\healthcare-blockchain\\healthcare-blockchain\\blockchain\\contracts\\Remix_HealthcareRecord.sol": {
+      "lastModificationDate": 1790513122831,
+      "contentHash": "7a513636ff0b966c712fe0da628f2ba2",
+      "sourceName": "contracts/Remix_HealthcareRecord.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "HealthcareRecord"
+      ]
+    }
+  }
+}

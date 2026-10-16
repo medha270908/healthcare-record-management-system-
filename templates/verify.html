@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Verify Record: {{ record.patient_id }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h2 class="card-title">🔍 Cryptographic Integrity Verification</h2>
+            <p class="card-subtitle">Comparing database record against immutable Ethereum smart contract hash</p>
+        </div>
+        <div>
+            <a class="button secondary small" href="{{ url_for('patients') }}">← Back to Patients</a>
+        </div>
+    </div>
+
+    <!-- Patient Clinical Record Summary -->
+    <div class="table-responsive" style="margin-bottom: 22px;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Patient ID</th>
+                    <th>Name</th>
+                    <th>Age / Gender</th>
+                    <th>Blood Group</th>
+                    <th>Current Diagnosis</th>
+                    <th>Prescription</th>
+                    <th>Record Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>{{ record.patient_id }}</strong></td>
+                    <td>{{ record.name }}</td>
+                    <td>{{ record.age }} / {{ record.gender }}</td>
+                    <td><span class="badge info">{{ record.blood_group }}</span></td>
+                    <td><strong style="color: var(--primary);">{{ record.disease }}</strong></td>
+                    <td>{{ record.prescription }}</td>
+                    <td>{{ record.record_date }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Side-by-Side Hash Comparison Grid -->
+    <div class="verify-comparison-grid">
+        <!-- Database Card -->
+        <div class="hash-card db-card">
+            <div class="hash-card-header">
+                <span class="hash-card-title">💾 Off-Chain Database</span>
+                <span class="badge info">Live Database State</span>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted);">
+                SHA-256 hash freshly recalculated from current database fields:
+            </p>
+            <div class="hash-box">{{ current_hash }}</div>
+            <div class="hash-meta">
+                <strong>Source:</strong> Relational Database (Off-chain)<br>
+                <strong>Calculation:</strong> SHA-256(ID|Name|Age|Gender|Blood|Disease|Prescription|Date)
+            </div>
+        </div>
+
+        <!-- Blockchain Card -->
+        <div class="hash-card chain-card">
+            <div class="hash-card-header">
+                <span class="hash-card-title">⛓️ Blockchain Smart Contract</span>
+                <span class="badge" style="background: var(--accent-purple-light); color: var(--accent-purple); border: 1px solid #c7d2fe;">
+                    Immutable Proof
+                </span>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted);">
+                Hash anchored in Solidity contract (<code>HealthcareRecord.sol</code>):
+            </p>
+            <div class="hash-box">{{ blockchain_hash or "No hash found on blockchain" }}</div>
+            <div class="hash-meta">
+                <strong>Block Timestamp:</strong> {{ block_timestamp or "Confirmed on Ledger" }}<br>
+                <strong>Recorded By:</strong> <code style="font-size: 11px;">{{ recorded_by or "Smart Contract Transaction" }}</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prominent Result Banner -->
+    {% if result == "Verified" %}
+    <div class="result-banner verified">
+        <div class="result-icon">✅</div>
+        <div class="result-text">
+            <h3>RECORD VERIFIED — INTEGRITY 100% INTACT</h3>
+            <p>The freshly generated database hash matches the cryptographic proof anchored on the blockchain. 
+               The clinical record has <strong>not been altered or tampered with</strong> since it was recorded.</p>
+        </div>
+    </div>
+    {% elif result == "Modified" %}
+    <div class="result-banner modified">
+        <div class="result-icon">🚨</div>
+        <div class="result-text">
+            <h3>UNAUTHORIZED MODIFICATION DETECTED</h3>
+            <p><strong>Hash Mismatch!</strong> The database record does not match the immutable hash on the blockchain. 
+               The clinical information in the database has been modified since it was anchored.</p>
+        </div>
+    </div>
+    {% else %}
+    <div class="result-banner error">
+        <div class="result-icon">⚠️</div>
+        <div class="result-text">
+            <h3>{{ result }}</h3>
+            <p>{{ error or "Unable to complete cryptographic verification. Please verify the blockchain node connection." }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Action Buttons -->
+    <div class="action-row">
+        <a class="button" href="{{ url_for('verify', patient_id=record.patient_id) }}">🔄 Re-run Verification</a>
+        <a class="button warning" href="{{ url_for('tamper_record', patient_id=record.patient_id) }}">
+            ✏️ Edit in Database (Simulate Alteration)
+        </a>
+        <a class="button secondary" href="{{ url_for('patients') }}">Back to Patients</a>
+        <a class="button secondary" href="{{ url_for('audit_log') }}">View in Audit Trail</a>
+    </div>
+</div>
+{% endblock %}
