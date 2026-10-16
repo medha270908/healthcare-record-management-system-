@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Healthcare Record Management Using Blockchain
 
 Diploma mini project prototype. Stores patient records in MySQL and stores
@@ -254,3 +255,7 @@ You should now have **3 things running at once**:
 - No digital signatures are used — this project relies purely on
   SHA-256 hashing plus blockchain immutability for integrity checking,
   as described in the documentation.
+=======
+# healthcare-record-management-system-
+blockchain mini project 
+>>>>>>> d573ffc666ae3effaafa35f51b84bf66f08e94b8
